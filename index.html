@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delphi Markets</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --site-primary: #6C5CE7;
+  --site-on-primary: #FFFFFF;
+  --site-secondary: #17233D;
+  --site-on-secondary: #F7F8FC;
+  --site-background: #0C1222;
+  --site-on-background: #F5F7FF;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  --bg: light-dark(#f4f6fb, #0c1222);
+  --surface: light-dark(#ffffff, #141d31);
+  --surface-2: light-dark(#eef1fa, #1a2640);
+  --text: light-dark(#151d32, #f5f7ff);
+  --muted: light-dark(#65708a, #9da9c4);
+  --line: light-dark(#dfe4f0, #2b3854);
+  --green: #32c99a;
+  --red: #ff7186;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--site-font-body); }
+button, input { font: inherit; }
+button { cursor: pointer; }
+#app { min-height: 100vh; width: 100%; border-radius: 0; background-color: var(--site-background); color: var(--site-on-background); background: var(--bg); }
+.topbar { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:18px clamp(16px, 4vw, 56px); border-bottom:1px solid var(--line); background:var(--surface); position:sticky; top:0; z-index:5; }
+.brand { display:flex; align-items:center; gap:11px; font-weight:850; letter-spacing:-.04em; font-size:20px; }
+.logo { width:36px; height:36px; border-radius:12px; background:var(--site-primary); display:grid; place-items:center; color:#fff; font-weight:900; box-shadow:0 6px 20px #6c5ce733; }
+.nav { display:flex; gap:22px; align-items:center; color:var(--muted); font-size:14px; }
+.nav a { color:inherit; text-decoration:none; }
+.btn { border:1px solid var(--line); background:var(--surface); color:var(--text); border-radius:12px; padding:11px 15px; font-weight:750; }
+.btn.primary { background:var(--site-primary); color:#fff; border-color:var(--site-primary); }
+.btn:hover { filter:brightness(1.08); }
+main { max-width:1200px; margin:0 auto; padding:32px clamp(16px, 4vw, 30px) 56px; }
+.notice { border:1px solid #6c5ce766; background:light-dark(#f0edff,#211c42); color:light-dark(#4b3eaa,#d8d1ff); padding:10px 13px; border-radius:12px; font-size:12px; font-weight:700; display:inline-flex; gap:8px; align-items:center; }
+.dot { width:7px;height:7px;border-radius:50%;background:var(--site-primary);display:inline-block; }
+.hero { display:grid; grid-template-columns:1.2fr .8fr; gap:30px; align-items:center; padding:40px 0 32px; }
+.eyebrow { color:var(--site-primary); font-size:12px; font-weight:850; letter-spacing:.15em; text-transform:uppercase; }
+h1 { font-family:var(--site-font-heading); font-size:calc(clamp(38px, 5.8vw, 66px) * var(--site-heading-scale)); letter-spacing:-.065em; line-height:1.02; margin:14px 0 18px; max-width:700px; }
+.gradient { color:var(--site-primary); }
+.hero p { color:var(--muted); line-height:1.7; max-width:570px; margin:0 0 22px; font-size:16px; }
+.hero-actions { display:flex; flex-wrap:wrap; gap:10px; }
+.hero-card { border:1px solid var(--line); background:linear-gradient(145deg,var(--surface),var(--surface-2)); padding:22px; border-radius:calc(24px * var(--site-radius-scale)); position:relative; overflow:hidden; }
+.hero-card:before { content:""; position:absolute; width:190px;height:190px;border-radius:50%;background:var(--site-primary);opacity:calc(.12 * var(--site-decoration-opacity));right:-70px;top:-80px;filter:blur(4px);pointer-events:none; }
+.card-top { display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;color:var(--muted); }
+.pill { background:light-dark(#e7f8f1,#153d37); color:light-dark(#117957,#74e8c4); padding:6px 9px; border-radius:999px; font-size:10px; font-weight:850; letter-spacing:.07em; }
+.big-number { font-size:36px; font-weight:850; letter-spacing:-.05em; margin:22px 0 4px; }
+.chart { width:100%; height:90px; margin:12px 0 8px; }
+.chart svg { width:100%;height:100%; }
+.stats { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0 35px; }
+.stat { padding:16px;border:1px solid var(--line);background:var(--surface);border-radius:16px; }
+.stat strong { display:block;font-size:19px;letter-spacing:-.03em;margin-bottom:5px; }
+.stat span { font-size:12px;color:var(--muted); }
+.section-head { display:flex;align-items:end;justify-content:space-between;gap:16px;margin:0 0 17px; }
+h2 { font-size:calc(25px * var(--site-heading-scale));letter-spacing:-.04em;margin:0 0 6px; }
+.section-head p { color:var(--muted);font-size:13px;margin:0; }
+.filters { display:flex;gap:8px;flex-wrap:wrap;margin:20px 0; }
+.filter { border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:9px 13px;border-radius:999px;font-size:12px;font-weight:750; }
+.filter.active { background:var(--site-primary);color:#fff;border-color:var(--site-primary); }
+.market-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px; }
+.market { border:1px solid var(--line);background:var(--surface);border-radius:18px;padding:17px;display:flex;flex-direction:column;min-height:240px;transition:transform .15s,border-color .15s; }
+.market:hover { transform:translateY(-2px);border-color:#6c5ce799; }
+.market-meta { display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:16px; }
+.category { font-size:10px;font-weight:850;letter-spacing:.08em;text-transform:uppercase;color:var(--muted); }
+.volume { font-size:10px;color:var(--muted); }
+.market h3 { font-size:16px;line-height:1.45;letter-spacing:-.025em;margin:0 0 10px; }
+.market-sub { color:var(--muted);font-size:11px;margin-bottom:18px; }
+.prob-row { display:flex;justify-content:space-between;align-items:center;font-size:11px;margin-bottom:7px;color:var(--muted); }
+.bar { height:6px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin-bottom:14px; }
+.bar span { display:block;height:100%;background:var(--site-primary);border-radius:99px; }
+.outcomes { display:flex;gap:8px;margin-top:auto; }
+.outcome { flex:1;border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:10px 8px;font-size:12px;font-weight:800;color:var(--text);display:flex;justify-content:space-between;gap:5px; }
+.outcome.yes { border-color:#32c99a55; }
+.outcome.no { border-color:#ff718655; }
+.outcome.yes b { color:var(--green); }
+.outcome.no b { color:var(--red); }
+.footer { border-top:1px solid var(--line);margin-top:42px;padding-top:20px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:11px;line-height:1.6; }
+.modal-backdrop { position:fixed;inset:0;background:#050914bb;display:none;align-items:center;justify-content:center;padding:18px;z-index:20; }
+.modal-backdrop.open { display:flex; }
+.modal { width:min(100%,420px);background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:0 20px 80px #0005; }
+.modal h2 { margin:0 0 10px; }
+.modal p { color:var(--muted);font-size:13px;line-height:1.6; }
+.modal-actions { display:flex;gap:9px;margin-top:20px; }
+.modal-actions button { flex:1; }
+.small { font-size:11px;color:var(--muted); }
+@media(max-width:800px){.hero{grid-template-columns:1fr;padding-top:30px}.hero-card{max-width:560px}.market-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.nav{display:none}}
+@media(max-width:520px){.topbar{padding:13px 15px}.brand{font-size:17px}.logo{width:32px;height:32px}main{padding-top:22px}.market-grid{grid-template-columns:1fr}.stats{gap:7px}.stat{padding:12px}.stat strong{font-size:16px}.stat span{font-size:10px}.hero p{font-size:14px}.section-head{align-items:start;flex-direction:column}}
+</style>
+</head>
+<body>
+<div id="app" data-sites-preview-theme="custom">
+<header class="topbar">
+  <div class="brand"><div class="logo">D</div><span>delphi<span style="color:var(--site-primary)">markets</span></span></div>
+  <nav class="nav"><a href="#markets">Markets</a><a href="#how">How it works</a><a href="#about">About</a></nav>
+  <button class="btn primary" id="connectTop">Connect wallet ↗</button>
+</header>
+<main>
+  <div class="notice"><span class="dot"></span> DEVELOPMENT PREVIEW · SEPOLIA TESTNET PREPARATION</div>
+  <section class="hero">
+    <div>
+      <div class="eyebrow">A new way to see what's next</div>
+      <h1>See the future.<br><span class="gradient">Trade your view.</span></h1>
+      <p>Explore prediction markets across crypto, politics, sports and technology. Put your conviction to the test on a community-powered market experience.</p>
+      <div class="hero-actions"><button class="btn primary" id="exploreBtn">Explore markets ↓</button><button class="btn" id="howBtn">How it works</button></div>
+    </div>
+    <div class="hero-card">
+      <div class="card-top"><span>Featured market</span><span class="pill">COMING TO TESTNET</span></div>
+      <div style="font-weight:800;font-size:18px;line-height:1.45;margin-top:16px">Will ETH outperform BTC this quarter?</div>
+      <div class="big-number">58% <span style="font-size:14px;color:var(--muted);font-weight:650;letter-spacing:0">YES probability</span></div>
+      <div class="chart"><svg viewBox="0 0 360 90" preserveAspectRatio="none" aria-label="Illustrative probability chart"><defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6c5ce7" stop-opacity=".35"/><stop offset="1" stop-color="#6c5ce7" stop-opacity="0"/></linearGradient></defs><path d="M0,68 C22,62 30,72 52,56 S82,66 104,44 S140,55 158,34 S194,46 216,29 S252,43 274,24 S315,34 360,12 L360,90 L0,90 Z" fill="url(#area)"/><path d="M0,68 C22,62 30,72 52,56 S82,66 104,44 S140,55 158,34 S194,46 216,29 S252,43 274,24 S315,34 360,12" fill="none" stroke="#8c7dff" stroke-width="3" stroke-linecap="round"/></svg></div>
+      <div class="card-top"><span>Illustrative probability</span><span>Not live pricing</span></div>
+    </div>
+  </section>
+  <section class="stats" aria-label="Platform highlights">
+    <div class="stat"><strong>Ethereum</strong><span>Target blockchain</span></div>
+    <div class="stat"><strong>USDC</strong><span>Planned market currency</span></div>
+    <div class="stat"><strong>4+ categories</strong><span>Markets to explore</span></div>
+  </section>
+  <section id="markets">
+    <div class="section-head"><div><h2>Explore markets</h2><p>Questions worth having a view on.</p></div><span class="small">Illustrative markets · Test trading not yet enabled</span></div>
+    <div class="filters" id="filters"><button class="filter active" data-filter="All">All markets</button><button class="filter" data-filter="Crypto">Crypto</button><button class="filter" data-filter="Politics">Politics</button><button class="filter" data-filter="Sports">Sports</button><button class="filter" data-filter="Technology">Technology</button></div>
+    <div class="market-grid" id="marketGrid"></div>
+  </section>
+  <section id="how" style="margin-top:44px">
+    <div class="section-head"><div><h2>Designed for clarity</h2><p>Understand the question before you take a position.</p></div></div>
+    <div class="stats">
+      <div class="stat"><strong>01 · Explore</strong><span>Browse questions and read each market's rules.</span></div>
+      <div class="stat"><strong>02 · Choose</strong><span>Compare YES and NO prices before deciding.</span></div>
+      <div class="stat"><strong>03 · Resolve</strong><span>Markets need a transparent resolution process and verified results.</span></div>
+    </div>
+  </section>
+  <footer class="footer" id="about"><span>© 2026 Delphi Markets · Testnet development</span><span>Wallet connection can be tested where MetaMask is available. Markets, USDC deposits, trading and payouts are not live.</span></footer>
+</main>
+<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal"><h2 id="modalTitle">Wallet connection</h2><p id="modalText">This is a website prototype. Wallet connection and USDC trading have not been integrated yet. No wallet request or transaction will be made.</p><div class="modal-actions"><button class="btn" id="closeModal">Close</button><button class="btn primary" id="understood">Got it</button></div></div>
+</div>
+</div>
+<script>
+const markets = [
+ {category:'Crypto',title:'Will ETH close above $5,000 before 2027?',sub:'Resolves using the stated reference price',yes:34,volume:'$84k demo volume'},
+ {category:'Crypto',title:'Will Bitcoin reach a new all-time high this year?',sub:'Based on a published BTC/USD index',yes:61,volume:'$210k demo volume'},
+ {category:'Politics',title:'Will voter turnout exceed 60% in the next election?',sub:'Resolution source to be defined',yes:47,volume:'$56k demo volume'},
+ {category:'Sports',title:'Will the underdog win the championship?',sub:'Official competition result',yes:28,volume:'$42k demo volume'},
+ {category:'Technology',title:'Will a major AI model launch before year-end?',sub:'Requires a clear launch definition',yes:72,volume:'$93k demo volume'},
+ {category:'Technology',title:'Will a new consumer device category break out this year?',sub:'Defined criteria required before launch',yes:39,volume:'$31k demo volume'}
+];
+const grid=document.getElementById('marketGrid');
+function render(filter='All'){
+ grid.innerHTML='';
+ markets.filter(m=>filter==='All'||m.category===filter).forEach(m=>{
+  const card=document.createElement('article');card.className='market';
+  card.innerHTML=`<div class="market-meta"><span class="category">${m.category}</span><span class="volume">${m.volume}</span></div><h3>${m.title}</h3><div class="market-sub">${m.sub}</div><div class="prob-row"><span>YES probability</span><strong>${m.yes}%</strong></div><div class="bar"><span style="width:${m.yes}%"></span></div><div class="outcomes"><button class="outcome yes" data-choice="YES">YES <b>${Math.max(1,Math.round(m.yes*.7))}¢</b></button><button class="outcome no" data-choice="NO">NO <b>${100-Math.max(1,Math.round(m.yes*.7))}¢</b></button></div>`;
+  card.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>openModal('Demo market selection',`You selected ${b.dataset.choice} for “${m.title}”. This is sample data only; trading and USDC transactions are not enabled.`)));
+  grid.appendChild(card);
+ });
+}
+function openModal(title,text){document.getElementById('modalTitle').textContent=title;document.getElementById('modalText').textContent=text;document.getElementById('modalBackdrop').classList.add('open');}
+function closeModal(){document.getElementById('modalBackdrop').classList.remove('open');}
+document.getElementById('connectTop').addEventListener('click',async()=>{const btn=document.getElementById('connectTop');if(!window.ethereum){openModal('MetaMask not detected','Open this website inside the MetaMask mobile browser, then tap Connect wallet again. Wallet connection is the first integration step; trading is not enabled.');return;}try{const accounts=await window.ethereum.request({method:'eth_requestAccounts'});if(!accounts||!accounts.length){openModal('Wallet not connected','No account was returned by MetaMask. Please try again.');return;}const chainId=await window.ethereum.request({method:'eth_chainId'});const short=accounts[0].slice(0,6)+'…'+accounts[0].slice(-4);btn.textContent=short;if(chainId==='0xaa36a7'){openModal('Wallet connected','Connected to MetaMask on Sepolia testnet. This is a test connection only: no real USDC trading or market contracts are active yet.');}else{openModal('Wallet connected — wrong network','Your wallet is connected, but Delphi Markets testing requires Sepolia testnet. In MetaMask, switch to Sepolia before continuing. No transaction has been made.');}}catch(error){openModal('Connection cancelled','MetaMask did not approve the connection. You can try again whenever you are ready.');}});
+document.getElementById('closeModal').addEventListener('click',closeModal);document.getElementById('understood').addEventListener('click',closeModal);
+document.getElementById('modalBackdrop').addEventListener('click',e=>{if(e.target.id==='modalBackdrop')closeModal()});
+document.getElementById('exploreBtn').addEventListener('click',()=>document.getElementById('markets').scrollIntoView({behavior:'smooth'}));
+document.getElementById('howBtn').addEventListener('click',()=>document.getElementById('how').scrollIntoView({behavior:'smooth'}));
+document.getElementById('filters').querySelectorAll('button').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render(btn.dataset.filter)}));
+render();
+</script>
+</body>
+</html>
